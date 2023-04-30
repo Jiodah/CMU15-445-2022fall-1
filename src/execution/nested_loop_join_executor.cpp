@@ -119,18 +119,6 @@ auto NestedLoopJoinExecutor::LeftJoin(const Schema &schema, Tuple *tuple) -> boo
     }
   }
   if (index_ == 0) {
-    if (!is_match_) {
-      std::vector<Value> value;
-      for (uint32_t i = 0; i < left_schema_.GetColumnCount(); i++) {
-        value.push_back(left_tuple_.GetValue(&left_schema_, i));
-      }
-      for (uint32_t i = 0; i < right_schema_.GetColumnCount(); i++) {
-        value.push_back(ValueFactory::GetNullValueByType(right_schema_.GetColumn(i).GetType()));
-      }
-      *tuple = {value, &schema};
-      is_match_ = true;
-      return true;
-    }
     while (left_executor_->Next(&left_tuple_, &left_rid_)) {
       is_match_ = false;
       for (const auto &right_tuple : right_tuples_) {
